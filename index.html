@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteador</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorteador</title>
+    <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        @fontePrincipal: Roboto, sans-serif;
+        @fonteDoTitulo: Lobster, cursive;
+        @corDoTexto:#fff;
+        @corDeFundo: #eb3e5a;
+
+        body {
+            background-color: #eb3e5a;
+            font-family: Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        h1 {
+            font-family: Lobster, cursive;
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .calculadora {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 300px;
+            text-align: center;
+        }
+
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            font-size: 1.2em;
+            border: 2px solid #fff;
+            border-radius: 4px;
+            background-color: transparent;
+            color: #000;
+        }
+
+        button {
+            background-color: #f7b731;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .resultado {
+            display: none;
+            color: #000;
+            padding: 16px;
+            margin-top: 20px;
+            border: 8px dotted #fff;
+            font-size: 1.5em;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="calculadora">
+        <h1>Sorteador</h1>
+        <form id="form-sorteador">
+            <label for="numero-maximo">Número Máximo</label>
+            <input type="number" id="numero-maximo" required min="2" value="2" step="1">
+
+            <label for="quantidade">Quantidade de Números Sorteados</label>
+            <input type="number" id="quantidade" required min="1" value="1" step="1">
+
+            <button type="submit">Sortear Números</button>
+        </form>
+
+        <div class="resultado">
+            Os Números Sorteados foram: <span id="resultado-valor"></span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('form-sorteador').addEventListener('submit', function(event) {
+                event.preventDefault();
+
+                let numeroMaximo = parseInt(document.getElementById('numero-maximo').value);
+                let quantidade = parseInt(document.getElementById('quantidade').value);
+
+                // Garantir que a quantidade não seja maior que o número máximo
+                if (quantidade > numeroMaximo) {
+                    alert('A quantidade de números sorteados não pode ser maior que o número máximo!');
+                    return;
+                }
+
+                // Criar uma lista de números de 1 até o número máximo
+                let numerosDisponiveis = [];
+                for (let i = 1; i <= numeroMaximo; i++) {
+                    numerosDisponiveis.push(i);
+                }
+
+                let numerosSorteados = [];
+
+                // Sortear os números sem repetição
+                for (let i = 0; i < quantidade; i++) {
+                    let indiceAleatorio = Math.floor(Math.random() * numerosDisponiveis.length);
+                    let numeroSorteado = numerosDisponiveis[indiceAleatorio];
+                    numerosSorteados.push(numeroSorteado);
+                    numerosDisponiveis.splice(indiceAleatorio, 1); // Remove o número sorteado
+                }
+
+                // Exibir os números sorteados
+                document.getElementById('resultado-valor').innerText = numerosSorteados.join(', ');
+                document.querySelector('.resultado').style.display = 'block';
+            });
+        });
+    </script>
+
+</body>
+</html>
+
+</body>
+</html>
