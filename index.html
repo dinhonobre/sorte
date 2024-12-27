@@ -1,80 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteador</title>
-</head>
-<body>
-    <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sorteador</title>
-    <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:wght@400;700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <title>Sorteador Responsivo</title>
     <style>
-        @fontePrincipal: Roboto, sans-serif;
-        @fonteDoTitulo: Lobster, cursive;
-        @corDoTexto:#fff;
-        @corDeFundo: #eb3e5a;
+        /* Variáveis globais */
+        :root {
+            --fonte-principal: 'Roboto', sans-serif;
+            --fonte-titulo: 'Lobster', cursive;
+            --cor-texto: #ffffff;
+            --cor-fundo: #eb3e5a;
+            --cor-botao: #f7b731;
+            --cor-input: #ffffff;
+            --cor-borda-input: #cccccc;
+            --sombra: rgba(0, 0, 0, 0.15);
+        }
 
+        /* Estilo geral */
         body {
-            background-color: #eb3e5a;
-            font-family: Roboto, sans-serif;
+            background-color: var(--cor-fundo);
+            font-family: var(--fonte-principal);
             margin: 0;
             padding: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
+            color: var(--cor-texto);
         }
 
         h1 {
-            font-family: Lobster, cursive;
-            font-size: 3em;
+            font-family: var(--fonte-titulo);
+            font-size: 2.8em;
             font-weight: bold;
             text-align: center;
+            margin-bottom: 20px;
         }
 
         .calculadora {
+            background: #ffffff;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 300px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px var(--sombra);
+            width: 100%;
+            max-width: 360px;
             text-align: center;
+            color: #333333;
         }
 
-        input, select, button {
-            width: 100%;
-            padding: 12px;
+        label {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+            text-align: left;
+        }
+
+        input {
+            width: 80%;
+            padding: 10px;
             margin: 8px 0;
-            font-size: 1.2em;
-            border: 2px solid #fff;
-            border-radius: 4px;
-            background-color: transparent;
-            color: #000;
+            font-size: 1em;
+            border: 1px solid var(--cor-borda-input);
+            border-radius: 8px;
+            background-color: var(--cor-input);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         button {
-            background-color: #f7b731;
-            cursor: pointer;
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            font-size: 1.1em;
             font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--cor-botao);
+            color: #ffffff;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #e0a123;
+            transform: scale(1.02);
+        }
+
+        button:active {
+            transform: scale(0.98);
         }
 
         .resultado {
             display: none;
-            color: #000;
+            background: var(--cor-fundo);
+            color: var(--cor-texto);
             padding: 16px;
             margin-top: 20px;
-            border: 8px dotted #fff;
-            font-size: 1.5em;
+            border: 2px dashed var(--cor-texto);
+            font-size: 1.2em;
+            border-radius: 8px;
         }
 
+        .resultado span {
+            font-weight: bold;
+            color: var(--cor-botao);
+        }
+
+        /* Responsividade para tablets */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.4em;
+            }
+
+            input, button {
+                font-size: 1em;
+            }
+
+            .resultado {
+                font-size: 1.1em;
+            }
+        }
+
+        /* Responsividade para celulares */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .calculadora {
+                padding: 15px;
+            }
+
+            input, button {
+                font-size: 0.9em;
+            }
+
+            .resultado {
+                font-size: 1em;
+            }
+        }
     </style>
 </head>
 <body>
-
     <div class="calculadora">
         <h1>Sorteador</h1>
         <form id="form-sorteador">
@@ -87,50 +160,34 @@
             <button type="submit">Sortear Números</button>
         </form>
 
-        <div class="resultado">
-            Os Números Sorteados foram: <span id="resultado-valor"></span>
+        <div class="resultado" id="resultado">
+            <div><h2>Os números vencedores são:</h2></div> <span id="resultado-valor"></span>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('form-sorteador').addEventListener('submit', function(event) {
-                event.preventDefault();
+        document.getElementById('form-sorteador').addEventListener('submit', function (event) {
+            event.preventDefault();
+            
+            const numeroMaximo = parseInt(document.getElementById('numero-maximo').value);
+            const quantidade = parseInt(document.getElementById('quantidade').value);
 
-                let numeroMaximo = parseInt(document.getElementById('numero-maximo').value);
-                let quantidade = parseInt(document.getElementById('quantidade').value);
+            if (quantidade > numeroMaximo) {
+                alert('A quantidade de números sorteados não pode ser maior que o número máximo.');
+                return;
+            }
 
-                // Garantir que a quantidade não seja maior que o número máximo
-                if (quantidade > numeroMaximo) {
-                    alert('A quantidade de números sorteados não pode ser maior que o número máximo!');
-                    return;
+            const numerosSorteados = [];
+            while (numerosSorteados.length < quantidade) {
+                const numero = Math.floor(Math.random() * numeroMaximo) + 1;
+                if (!numerosSorteados.includes(numero)) {
+                    numerosSorteados.push(numero);
                 }
+            }
 
-                // Criar uma lista de números de 1 até o número máximo
-                let numerosDisponiveis = [];
-                for (let i = 1; i <= numeroMaximo; i++) {
-                    numerosDisponiveis.push(i);
-                }
-
-                let numerosSorteados = [];
-
-                // Sortear os números sem repetição
-                for (let i = 0; i < quantidade; i++) {
-                    let indiceAleatorio = Math.floor(Math.random() * numerosDisponiveis.length);
-                    let numeroSorteado = numerosDisponiveis[indiceAleatorio];
-                    numerosSorteados.push(numeroSorteado);
-                    numerosDisponiveis.splice(indiceAleatorio, 1); // Remove o número sorteado
-                }
-
-                // Exibir os números sorteados
-                document.getElementById('resultado-valor').innerText = numerosSorteados.join(', ');
-                document.querySelector('.resultado').style.display = 'block';
-            });
+            document.getElementById('resultado-valor').textContent = numerosSorteados.join(', ');
+            document.getElementById('resultado').style.display = 'block';
         });
     </script>
-
-</body>
-</html>
-
 </body>
 </html>
